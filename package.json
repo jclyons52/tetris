@@ -2,16 +2,21 @@
   "name": "tetris",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://myusername.github.io/tetris",
   "dependencies": {
+    "bootstrap": "3",
     "flow-bin": "^0.56.0",
     "lodash": "^4.17.4",
     "react": "^16.0.0",
+    "react-bootstrap": "^0.31.3",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.14",
     "redux": "^3.7.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

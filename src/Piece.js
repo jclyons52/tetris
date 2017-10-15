@@ -135,6 +135,10 @@ export function isFull(row: Row): boolean {
     return row.filter(i => i === 0).length === 0
 }
 
+export function isOverlapping(rows: Row[], p: IPiece) {
+    return p.filter(({ x, y }) => rows[y][x] === 1).length > 0
+}
+
 function canMoveLeft(rows: Row[], p: IPiece) {
     return p.filter(({ x, y }) => {
        if (x === limit.x.lower) return true
@@ -156,10 +160,11 @@ export function canMoveDown(rows: Row[], p: IPiece) {
     }).length === 0
 }
 
-export function add(rows: Row[], p: IPiece): Row[] {
+export function add(rows: Row[], p: IPiece): { rows: Row[], score: number } {
     p.map(({ x, y }) => rows[y][x] = 1)
     const filtered = rows.filter(r => !isFull(r))
+    const score = rows.filter(r => isFull(r)).length
     const filler = getRows(1 + limit.y.upper - filtered.length)
-    return filler.concat(filtered)
+    return { rows: filler.concat(filtered), score }
 
 } 

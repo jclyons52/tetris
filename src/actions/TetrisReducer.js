@@ -16,49 +16,54 @@ import type { IPiece } from '../Piece'
 import { getRows } from '../Rows'
 import * as Piece from '../Piece'
 
-const Status = {
+export const Status = {
     inactive: 0,
     active: 1,
     paused: 2,
     gameOver: 3
 }
 
-type IStatus =
-| 0
-| 1
-| 2
-| 3
+export type IStatus =
+    | 0
+    | 1
+    | 2
+    | 3
 
 export type State = {
     rows: Rows,
     piece: ?IPiece,
-    status: IStatus
+    status: IStatus,
+    score: number,
+    highScores: number[]
 }
 
-const initialState = { 
+const initialState = {
     rows: getRows(),
     piece: null,
-    status: Status.inactive
+    status: Status.inactive,
+    score: 0,
+    highScores: []
 }
 
 export function reducer(state: State = initialState, action: Action = { type: null }): State {
     switch (action.type) {
-        case START:      return start(state)
-        case PAUSE:      return state
-        case PLAY:       return state
-        case NEW_PIECE:  return newPiece(state)
-        case MOVE_DOWN:  return moveDown(state)
+        case START: return start(state)
+        case PAUSE: return pause(state)
+        case PLAY: return play(state)
+        case NEW_PIECE: return newPiece(state)
+        case MOVE_DOWN: return moveDown(state)
         case MOVE_RIGHT: return moveRight(state)
-        case MOVE_LEFT:  return moveLeft(state)
-        case ROTATE:     return rotate(state)
-        default:         return state
+        case MOVE_LEFT: return moveLeft(state)
+        case ROTATE: return rotate(state)
+        default: return state
     }
 }
 
 function start(state) {
     const rows = getRows()
     const status = Status.active
-    return { ...state, rows, status }
+    const score = 0
+    return { ...state, rows, status, score }
 }
 
 function play(state) {
@@ -87,15 +92,33 @@ function moveDown(state) {
         return { ...state, piece }
     }
 
-    if (Piece.overTopLimit(ip)) return { ...state, status: Status.gameOver }
+    if (Piece.overTopLimit(ip)) {
+        return gameOver(state, ip)
+    }
 
-    const rows = Piece.add(state.rows, ip)
-    return { ...state, rows, piece: null }
+    const { rows, score } = Piece.add(state.rows, ip)
+    return {
+        ...state,
+        rows,
+        piece: null,
+        score: state.score + score
+    }
 
     function addPiece() {
         const piece = Piece.generate()
+        if (Piece.isOverlapping(state.rows, piece)) {
+            return gameOver(state, piece)
+        }
         return { ...state, piece }
     }
+}
+
+function gameOver(state, piece) {
+    const min = Math.min(...state.highScores)
+    if (state.score > min) {
+        [...state.highScores, state.score].sort(Number).slice(0, 3)
+    }
+    return { ...state, piece, status: Status.gameOver }
 }
 
 function moveRight(state) {
