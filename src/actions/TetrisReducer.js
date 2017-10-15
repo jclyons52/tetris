@@ -114,11 +114,13 @@ function moveDown(state) {
 }
 
 function gameOver(state, piece) {
-    const min = Math.min(...state.highScores)
+    const status = Status.gameOver
+    const min = Math.min(0, ...state.highScores)
     if (state.score > min) {
-        [...state.highScores, state.score].sort(Number).slice(0, 3)
+       const highScores =  [...state.highScores, state.score].sort(Number).slice(0, 3)
+       return { ...state, piece, status, highScores }
     }
-    return { ...state, piece, status: Status.gameOver }
+    return { ...state, piece, status }
 }
 
 function moveRight(state) {
