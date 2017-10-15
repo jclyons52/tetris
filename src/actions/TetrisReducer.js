@@ -37,7 +37,7 @@ export type State = {
     highScores: number[]
 }
 
-const initialState = {
+export const initialState = {
     rows: getRows(),
     piece: null,
     status: Status.inactive,
@@ -47,15 +47,15 @@ const initialState = {
 
 export function reducer(state: State = initialState, action: Action = { type: null }): State {
     switch (action.type) {
-        case START: return start(state)
-        case PAUSE: return pause(state)
-        case PLAY: return play(state)
-        case NEW_PIECE: return newPiece(state)
-        case MOVE_DOWN: return moveDown(state)
+        case START:      return start(state)
+        case PAUSE:      return pause(state)
+        case PLAY:       return play(state)
+        case NEW_PIECE:  return newPiece(state)
+        case MOVE_DOWN:  return moveDown(state)
         case MOVE_RIGHT: return moveRight(state)
-        case MOVE_LEFT: return moveLeft(state)
-        case ROTATE: return rotate(state)
-        default: return state
+        case MOVE_LEFT:  return moveLeft(state)
+        case ROTATE:     return rotate(state)
+        default:         return state
     }
 }
 
