@@ -50,7 +50,6 @@ export function reducer(state: State = initialState, action: Action = { type: nu
         case START:      return start(state)
         case PAUSE:      return pause(state)
         case PLAY:       return play(state)
-        case NEW_PIECE:  return newPiece(state)
         case MOVE_DOWN:  return moveDown(state)
         case MOVE_RIGHT: return moveRight(state)
         case MOVE_LEFT:  return moveLeft(state)
@@ -74,11 +73,6 @@ function play(state) {
 function pause(state) {
     const status = Status.paused
     return { ...state, status }
-}
-
-function newPiece(state) {
-    const piece = Piece.generate()
-    return { ...state, piece }
 }
 
 function moveDown(state) {
@@ -125,18 +119,21 @@ function gameOver(state, piece) {
 
 function moveRight(state) {
     if (!state.piece) return state
+    if (state.status !== Status.active) return state
     const piece = Piece.moveRight(state.rows, state.piece)
     return { ...state, piece }
 }
 
 function moveLeft(state) {
     if (!state.piece) return state
+    if (state.status !== Status.active) return state    
     const piece = Piece.moveLeft(state.rows, state.piece)
     return { ...state, piece }
 }
 
 function rotate(state) {
     if (!state.piece) return state
+    if (state.status !== Status.active) return state    
     const piece = Piece.rotate(state.piece)
     return { ...state, piece }
 }
