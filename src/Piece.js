@@ -1,170 +1,96 @@
 // @flow
 
-import type { Row } from './Rows'
+import React from 'react'
+import * as Location from './Location'
+import type { location } from './Location'
+import type { IRow, IPoint } from './Rows'
 import { getRows } from './Rows'
-export type location = { x: number, y: number }
-export type IPiece = location[]
+import { rand } from './Util'
 
-const limit = {
-    y: {
-        upper: 17,
-        lower: 0
-    },
-    x: {
-        upper: 9,
-        lower: 0
+export type IPiece = {
+  loc: location[],
+  color: string
+}
+
+const tile = {
+  full: '■',
+  empty: '□'
+}
+
+const colors = [
+  'red',
+  'green',
+  'blue'
+]
+
+export function printTile(p: IPiece, y: number): Function {
+  return (t: IPoint, x: number) => {
+    if (!p) return t.full ? tile.full : tile.empty
+    if (p.loc.filter(pi => pi.x == x && pi.y == y).length > 0) {
+      return (<span style={{ color: p.color }} >{tile.full}</span>)
     }
+    return (<span style={{ color: t.color }} >{t.full ? tile.full : tile.empty}</span>)
+  }
 }
 
 export function generate(): IPiece {
-    const l = (x, y) => ({ x, y })
-    const rand = (items) => items[Math.floor(Math.random() * items.length)]
-    const shapes = [
-        [l(0, 0), l(0, 1), l(1, 0), l(1, 1)],
-        [l(0, 0), l(0, 1), l(0, 2), l(0, 3)],
-        [l(0, 0), l(0, 1), l(1, 1), l(0, 2)],
-        [l(0, 0), l(0, 1), l(0, 2), l(1, 2)],
-    ]
-    return rand(shapes)
+  return { color: rand(colors), loc: Location.generate() }
 }
 
 export function rotate(piece: IPiece): IPiece {
-    const relative = locToArr(piece[1])
-    const newPiece = piece.map(loc => {
-        const arr = diff(locToArr(loc), relative)
-        const rotated = [-1 * arr[1], 1 * arr[0]]
-        const n = sum(rotated, relative)
-        return { x: n[0], y: n[1] }
-    })
-    const shift = (() => {
-        const bounds = getBounds(newPiece)
-        return getRequiredShifts(bounds)
-    })()
-
-    return newPiece.map(({ x, y }) => ({ x: x+shift.x, y: y+shift.y }))
-
-    function getRequiredShifts(bounds) {
-        return {
-            x: (() => {
-                if (bounds.x.max > limit.x.upper) {
-                    return limit.x.upper - bounds.x.max;
-                }
-                if (bounds.x.min < limit.x.lower) {
-                    return - bounds.x.min;
-                }
-                return 0
-            })(),
-            y: (() => {
-                if (bounds.y.max > limit.y.upper) {
-                    return limit.y.upper - bounds.y.max;
-                }
-                if (bounds.y.min < limit.y.lower) {
-                    return - bounds.y.min;
-                }
-                return 0
-            })()
-        };
-    }
-
-    function getBounds(p) {
-        return {
-            x: {
-                max: Math.max(...p.map(({ x }) => x)),
-                min: Math.min(...p.map(({ x }) => x))
-            },
-            y: {
-                max: Math.max(...p.map(({ y }) => y)),
-                min: Math.min(...p.map(({ y }) => y))
-            }
-        };
-    }
-
-    function locToArr({ x, y }) {
-        return [x, y]
-    }
-
-    function diff([x1, y1], [x2, y2]) {
-        return [x1 - x2, y1 - y2]
-    }
-
-    function sum([x1, y1], [x2, y2]) {
-        return [x1 + x2, y1 + y2]
-    }
-
-    function product([x1, y1], [x2, y2]) {
-        return [x1 * x2, y1 * y2]
-    }
+  return { color: piece.color, loc: Location.rotate(piece.loc)  }
 }
 
 export function moveDown(piece: IPiece): IPiece {
-    const shift = ({ x, y }) => ({ y: y + 1, x })
-    return atBottomLimit(piece) ? piece : piece.map(shift)
+  return { color: piece.color, loc: Location.moveDown(piece.loc) }
 }
 
-export function moveLeft(rows: Row[], piece: IPiece): IPiece {
-    const shift = ({ x, y }) => ({ x: x - 1, y })
-    return canMoveLeft(rows, piece) ?  piece.map(shift) : piece
+export function moveLeft(rows: IRow[], piece: IPiece): IPiece {
+  return { color: piece.color, loc: Location.moveLeft(rows, piece.loc) }
 }
 
-export function moveRight(rows: Row[], piece: IPiece): IPiece {
-    const shift = ({ x, y }) => ({ x: x + 1, y })
-    return canMoveRight(rows, piece) ? piece.map(shift) : piece
+export function moveRight(rows: IRow[], piece: IPiece): IPiece {
+  return { color: piece.color, loc: Location.moveRight(rows, piece.loc) }
 }
 
 export function atLeftLimit(piece: IPiece): boolean {
-    return piece.filter(({ x }) => x === limit.x.lower).length > 0
+  return Location.atLeftLimit(piece.loc)
 }
 
 export function atRightLimit(piece: IPiece): boolean {
-    return piece.filter(({ x }) => x === limit.x.upper).length > 0
+  return Location.atRightLimit(piece.loc)
 }
 
 export function atTopLimit(piece: IPiece): boolean {
-    return piece.filter(({ y }) => y === limit.y.lower).length > 0
+  return Location.atTopLimit(piece.loc)
 }
 
 export function overTopLimit(piece: IPiece): boolean {
-    return piece.filter(({ y }) => y > limit.y.upper).length > 0
+  return Location.overTopLimit(piece.loc)
 }
 
 export function atBottomLimit(piece: IPiece): boolean {
-    return piece.filter(({ y }) => y === limit.y.upper).length > 0
+  return Location.atBottomLimit(piece.loc)
 }
 
-export function isFull(row: Row): boolean {
-    return row.filter(i => i === 0).length === 0
+export function isFull(row: IRow): boolean {
+  return Location.isFull(row)
 }
 
-export function isOverlapping(rows: Row[], p: IPiece) {
-    return p.filter(({ x, y }) => rows[y][x] === 1).length > 0
+export function isOverlapping(rows: IRow[], p: IPiece) {
+  return Location.isOverlapping(rows, p.loc) 
 }
 
-function canMoveLeft(rows: Row[], p: IPiece) {
-    return p.filter(({ x, y }) => {
-       if (x === limit.x.lower) return true
-       if (rows[y][x - 1] === 1) return true
-    }).length === 0
+export function canMoveDown(rows: IRow[], p: IPiece) {
+  return Location.canMoveDown(rows, p.loc) 
 }
 
-function canMoveRight(rows: Row[], p: IPiece) {
-    return p.filter(({ x, y }) => {
-       if (x === limit.x.upper) return true
-       if (rows[y][x + 1] === 1) return true
-    }).length === 0
-}
-
-export function canMoveDown(rows: Row[], p: IPiece) {
-    return p.filter(({ x, y }) => {
-       if (y === limit.y.upper) return true
-       if (rows[y + 1][x] === 1) return true
-    }).length === 0
-}
-
-export function add(rows: Row[], p: IPiece): { rows: Row[], score: number } {
-    p.map(({ x, y }) => rows[y][x] = 1)
-    const filtered = rows.filter(r => !isFull(r))
-    const score = rows.filter(r => isFull(r)).length
-    const filler = getRows(1 + limit.y.upper - filtered.length)
-    return { rows: filler.concat(filtered), score }
-
+export function add(rows: IRow[], p: IPiece): { rows: IRow[], score: number } {
+  p.loc.map(({ x, y }) => {
+    rows[y][x] = { color: p.color, full: true }
+  })
+  const filtered = rows.filter(r => !isFull(r))
+  const score = rows.filter(r => isFull(r)).length
+  const filler = getRows(1 + Location.limit.y.upper - filtered.length)
+  return { rows: filler.concat(filtered), score }
 } 

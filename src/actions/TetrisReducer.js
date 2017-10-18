@@ -11,7 +11,7 @@ import {
     MOVE_LEFT,
     ROTATE
 } from './TetrisActions'
-import type { Rows } from '../Rows'
+import type { IRows } from '../Rows'
 import type { IPiece } from '../Piece'
 import { getRows } from '../Rows'
 import * as Piece from '../Piece'
@@ -30,7 +30,7 @@ export type IStatus =
     | 3
 
 export type State = {
-    rows: Rows,
+    rows: IRows,
     piece: ?IPiece,
     status: IStatus,
     score: number,

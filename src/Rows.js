@@ -2,9 +2,22 @@
 import { range } from 'lodash'
 import type { IPiece } from './Piece'
 
-export type Row = number[]
-export type Rows = Row[]
+export type IPoint = { 
+    full: boolean,
+    color: string,
+ }
 
-export function getRows(count: number = 18): Row[] {
-    return range(count).map(i => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+export type IRow = IPoint[]
+export type IRows = IRow[]
+
+export function getRows(count: number = 18): IRow[] {
+    return range(count).map(() => row())
+}
+
+function row() {
+    return range(10).map(() => p())
+}
+
+function p() {
+    return { full: false, color: 'black' }
 }

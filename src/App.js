@@ -5,32 +5,20 @@ import { connect } from 'react-redux'
 import type { State, IStatus } from './actions/TetrisReducer'
 import { Status } from './actions/TetrisReducer'
 
-import type { Rows } from './Rows'
+import type { IRows } from './Rows'
 import type { IPiece } from './Piece'
 import * as Piece from './Piece'
 import { start, pause, play, moveDown, moveRight, moveLeft, rotate } from './actions/TetrisActions'
-import { Button, Grid, Row, Col, Jumbotron, Panel } from 'react-bootstrap'
+import { Button, Grid, Row, Col, Panel } from 'react-bootstrap'
+import Jumbotron from './components/Jumbotron'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import './App.css';
 
-const tile = {
-  full: '■',
-  empty: '□'
-}
 
-function printTile(p: IPiece, y: number): Function {
-  return (t: number, x: number): string => {
-    if (!p) return t === 0 ? tile.empty : tile.full
-    if (p.filter(pi => pi.x == x && pi.y == y).length > 0) {
-      return tile.full
-    }
-    return t === 0 ? tile.empty : tile.full
-  }
-}
 
 type Props = {
-  rows: Rows,
+  rows: IRows,
   piece: any,
   status: IStatus,
   score: number,
@@ -72,45 +60,18 @@ class App extends Component<Props, any> {
     return (
       <div className="App">
         <Grid>
-          {(() => {
-            if (this.props.status === Status.inactive) {
-              return (
-                <Jumbotron style={{ textAlign: 'center' }} >
-                <h1>New Game</h1>
-                  <Button onClick={this.props.start} >START</Button>
-                </Jumbotron>
-              )
-            }
-            if (this.props.status === Status.active) {
-              return (
-                <Jumbotron style={{ textAlign: 'center' }} >
-                  <h1>Score: {this.props.score}</h1>
-                  <Button onClick={this.props.pause}>PAUSE</Button>
-                </Jumbotron>
-              )
-            }
-            if (this.props.status === Status.paused) {
-              return (
-                <Jumbotron style={{ textAlign: 'center' }} >
-                  <h1>Score: {this.props.score}</h1>
-                  <Button onClick={this.props.play}>PLAY</Button>
-                </Jumbotron>
-              )
-            }
-            if (this.props.status === Status.gameOver) {
-              return (
-                <Jumbotron style={{ textAlign: 'center' }} >
-                <h1>Game Over</h1>
-                  <Button onClick={this.props.start} >Play Again</Button>
-                </Jumbotron>
-              )
-            }
-          })()}
+          <Jumbotron
+            status={this.props.status}
+            score={this.props.score}
+            start={this.props.start}
+            pause={this.props.pause}
+            play={this.props.play}
+          />
           <Row>
             <Col sm={4} smPush={4} >
               {this.props.rows.map((row, y) => (
                 <p>
-                  {row.map(printTile(this.props.piece, y))}
+                  {row.map(Piece.printTile(this.props.piece, y))}
                 </p>
               ))}
             </Col>
