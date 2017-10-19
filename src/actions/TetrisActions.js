@@ -2,7 +2,7 @@
 
 export type Action = 
 | { type: null }
-| { type: 'START' }
+| { type: 'START', loop: number }
 | { type: 'PAUSE' }
 | { type: 'PLAY' }
 | { type: 'NEW_PIECE' }
@@ -19,8 +19,8 @@ export const MOVE_RIGHT = 'MOVE_RIGHT'
 export const MOVE_LEFT = 'MOVE_LEFT'
 export const ROTATE = 'ROTATE'
 
-export function start(): Action {
-    return { type: START }
+export function start(loop: number): Action {
+    return { type: START, loop }
 }
 
 export function pause(): Action {

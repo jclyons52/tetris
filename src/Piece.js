@@ -23,6 +23,10 @@ const colors = [
   'blue'
 ]
 
+function randColor() {
+  return '#'+Math.floor(Math.random()*16777215).toString(16)
+}
+
 export function printTile(p: IPiece, y: number): Function {
   return (t: IPoint, x: number) => {
     if (!p) return t.full ? tile.full : tile.empty
@@ -34,7 +38,7 @@ export function printTile(p: IPiece, y: number): Function {
 }
 
 export function generate(): IPiece {
-  return { color: rand(colors), loc: Location.generate() }
+  return { color: randColor(), loc: Location.generate() }
 }
 
 export function rotate(piece: IPiece): IPiece {

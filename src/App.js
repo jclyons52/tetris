@@ -46,6 +46,7 @@ class App extends Component<Props, any> {
       case upArrow: return this.props.rotate()
       case downArrow: return this.props.moveDown()
     }
+    event.preventDefault()
   }
 
   componentWillMount(props) {
@@ -102,8 +103,8 @@ function mapStateToProps(state: State) {
 function mapDispatchToProps(dispatch: Function) {
   return {
     start: (() => {
-      dispatch(start())
-      setInterval(() => dispatch(moveDown()), 1000)
+      const loop = setInterval(() => dispatch(moveDown()), 1000)
+      dispatch(start(loop))
     }),
     pause: () => dispatch(pause()),
     play: () => dispatch(play()),

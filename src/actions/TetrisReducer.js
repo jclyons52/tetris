@@ -34,7 +34,8 @@ export type State = {
     piece: ?IPiece,
     status: IStatus,
     score: number,
-    highScores: number[]
+    highScores: number[],
+    loop: number
 }
 
 export const initialState = {
@@ -47,7 +48,7 @@ export const initialState = {
 
 export function reducer(state: State = initialState, action: Action = { type: null }): State {
     switch (action.type) {
-        case START:      return start(state)
+        case START:      return start(state, action.loop)
         case PAUSE:      return pause(state)
         case PLAY:       return play(state)
         case MOVE_DOWN:  return moveDown(state)
@@ -58,11 +59,11 @@ export function reducer(state: State = initialState, action: Action = { type: nu
     }
 }
 
-function start(state) {
+function start(state, loop) {
     const rows = getRows()
     const status = Status.active
     const score = 0
-    return { ...state, rows, status, score }
+    return { ...state, rows, status, score, loop }
 }
 
 function play(state) {
@@ -110,11 +111,13 @@ function moveDown(state) {
 function gameOver(state, piece) {
     const status = Status.gameOver
     const min = Math.min(0, ...state.highScores)
+    const loop = 0
+    clearInterval(state.loop)
     if (state.score > min) {
        const highScores =  [...state.highScores, state.score].sort(Number).slice(0, 3)
-       return { ...state, piece, status, highScores }
+       return { ...state, piece, status, highScores, loop }
     }
-    return { ...state, piece, status }
+    return { ...state, piece, status, loop }
 }
 
 function moveRight(state) {
