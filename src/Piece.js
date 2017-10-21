@@ -5,7 +5,6 @@ import * as Location from './Location'
 import type { location } from './Location'
 import type { IRow, IPoint } from './Rows'
 import { getRows } from './Rows'
-import { rand } from './Util'
 
 export type IPiece = {
   loc: location[],
@@ -17,12 +16,6 @@ const tile = {
   empty: '□'
 }
 
-const colors = [
-  'red',
-  'green',
-  'blue'
-]
-
 function randColor() {
   return '#'+Math.floor(Math.random()*16777215).toString(16)
 }
@@ -30,7 +23,7 @@ function randColor() {
 export function printTile(p: IPiece, y: number): Function {
   return (t: IPoint, x: number) => {
     if (!p) return t.full ? tile.full : tile.empty
-    if (p.loc.filter(pi => pi.x == x && pi.y == y).length > 0) {
+    if (p.loc.filter(pi => pi.x === x && pi.y === y).length > 0) {
       return (<span style={{ color: p.color }} >{tile.full}</span>)
     }
     return (<span style={{ color: t.color }} >{t.full ? tile.full : tile.empty}</span>)
@@ -92,6 +85,7 @@ export function canMoveDown(rows: IRow[], p: IPiece) {
 export function add(rows: IRow[], p: IPiece): { rows: IRow[], score: number } {
   p.loc.map(({ x, y }) => {
     rows[y][x] = { color: p.color, full: true }
+    return null
   })
   const filtered = rows.filter(r => !isFull(r))
   const score = rows.filter(r => isFull(r)).length

@@ -5,7 +5,6 @@ import {
     START,
     PAUSE,
     PLAY,
-    NEW_PIECE,
     MOVE_DOWN,
     MOVE_RIGHT,
     MOVE_LEFT,
@@ -43,7 +42,8 @@ export const initialState = {
     piece: null,
     status: Status.inactive,
     score: 0,
-    highScores: []
+    highScores: [],
+    loop: 0
 }
 
 export function reducer(state: State = initialState, action: Action = { type: null }): State {

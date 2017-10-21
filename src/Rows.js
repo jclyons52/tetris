@@ -1,6 +1,5 @@
 // @flow
 import { range } from 'lodash'
-import type { IPiece } from './Piece'
 
 export type IPoint = { 
     full: boolean,

@@ -1,25 +1,23 @@
-//@flow
+// @flow
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import type { State, IStatus } from './actions/TetrisReducer'
-import { Status } from './actions/TetrisReducer'
 
 import type { IRows } from './Rows'
 import type { IPiece } from './Piece'
-import * as Piece from './Piece'
 import { start, pause, play, moveDown, moveRight, moveLeft, rotate } from './actions/TetrisActions'
-import { Button, Grid, Row, Col, Panel } from 'react-bootstrap'
+import { Grid, Row } from 'react-bootstrap'
 import Jumbotron from './components/Jumbotron'
+import Board from './components/Board'
+import ScoreBoard from './components/ScoreBoard'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import './App.css';
 
-
-
 type Props = {
   rows: IRows,
-  piece: any,
+  piece: IPiece,
   status: IStatus,
   score: number,
   highScores: number[],
@@ -40,13 +38,15 @@ const downArrow = 40
 class App extends Component<Props, any> {
 
   _handleKeyDown(event: KeyboardEvent): void {
+    event.preventDefault()
     switch (event.keyCode) {
       case leftArrow: return this.props.moveLeft()
       case rightArrow: return this.props.moveRight()
       case upArrow: return this.props.rotate()
       case downArrow: return this.props.moveDown()
+      default:
+        return
     }
-    event.preventDefault()
   }
 
   componentWillMount(props) {
@@ -69,20 +69,13 @@ class App extends Component<Props, any> {
             play={this.props.play}
           />
           <Row>
-            <Col sm={4} smPush={4} >
-              {this.props.rows.map((row, y) => (
-                <p>
-                  {row.map(Piece.printTile(this.props.piece, y))}
-                </p>
-              ))}
-            </Col>
-            <Col sm={4} smPush={4}>
-              <Panel header="High Scores">
-                <ul>
-                  {this.props.highScores.map(s => <li>{s}</li>)}
-                </ul>
-              </Panel>
-            </Col>
+            <Board
+              rows={this.props.rows}
+              piece={this.props.piece}
+            />
+            <ScoreBoard
+              highScores={this.props.highScores}
+            />
           </Row>
         </Grid>
       </div>

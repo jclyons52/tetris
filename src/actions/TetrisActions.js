@@ -5,7 +5,6 @@ export type Action =
 | { type: 'START', loop: number }
 | { type: 'PAUSE' }
 | { type: 'PLAY' }
-| { type: 'NEW_PIECE' }
 | { type: 'MOVE_DOWN' }
 | { type: 'MOVE_RIGHT' }
 | { type: 'MOVE_LEFT' }
@@ -13,7 +12,6 @@ export type Action =
 export const START = 'START'
 export const PAUSE = 'PAUSE'
 export const PLAY = 'PLAY'
-export const NEW_PIECE = 'NEW_PIECE'
 export const MOVE_DOWN = 'MOVE_DOWN'
 export const MOVE_RIGHT = 'MOVE_RIGHT'
 export const MOVE_LEFT = 'MOVE_LEFT'
@@ -29,10 +27,6 @@ export function pause(): Action {
 
 export function play(): Action {
     return { type: PLAY }
-}
-
-export function newPiece(): Action {
-    return { type: NEW_PIECE }
 }
 
 export function moveDown(): Action {

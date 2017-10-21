@@ -3,7 +3,7 @@
 import React from 'react'
 import { Status } from '../actions/TetrisReducer'
 import type { IStatus } from '../actions/TetrisReducer'
-import { Button, Grid, Row, Col, Jumbotron, Panel } from 'react-bootstrap'
+import { Button, Jumbotron } from 'react-bootstrap'
 
 
 type Props = {

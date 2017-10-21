@@ -1,5 +1,4 @@
 import { reducer, initialState, Status } from './TetrisReducer'
-import { flatMap } from 'lodash'
 import * as Piece from '../Piece'
 
 it('starts a game', () => {
@@ -29,7 +28,7 @@ it('adds a piece if move down is called without one', () => {
     const initial = { ...initialState, status: Status.active }
     const action = { type: 'MOVE_DOWN' }
     const final = reducer(initial, action)
-    expect(final.piece.length).toBe(4)
+    expect(final.piece.loc.length).toBe(4)
 })
 
 it('does not move a piece if the game is not active', () => {
@@ -47,22 +46,26 @@ it('moves a piece right', () => {
     }
     const action = { type: 'MOVE_RIGHT' }
     const final = reducer(initial, action)
-    final.piece.map((loc, i) => {
-        expect(loc.x).toBe(initial.piece[i].x + 1)
+    final.piece.loc.map((loc, i) => {
+        expect(loc.x).toBe(initial.piece.loc[i].x + 1)
+        return null
     })
 })
 
 it('moves a piece left', () => {
+    const piece = Piece.generate()
     const initial = {
         ...initialState,
         status: Status.active,
-        piece: Piece
-            .generate()
-            .map(({ x, y }) => ({ x: x + 1, y }))
+        piece: {
+            color: piece.color,
+            loc: piece.loc.map(({ x, y }) => ({ x: x + 1, y }))
+        }
     }
     const action = { type: 'MOVE_LEFT' }
     const final = reducer(initial, action)
-    final.piece.map((loc, i) => {
-        expect(loc.x).toBe(initial.piece[i].x - 1)
+    final.piece.loc.map((loc, i) => {
+        expect(loc.x).toBe(initial.piece.loc[i].x - 1)
+        return null
     })
 })
