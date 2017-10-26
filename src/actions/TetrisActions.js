@@ -2,12 +2,13 @@
 
 export type Action = 
 | { type: null }
-| { type: 'START', loop: number }
+| { type: 'START' }
 | { type: 'PAUSE' }
 | { type: 'PLAY' }
 | { type: 'MOVE_DOWN' }
 | { type: 'MOVE_RIGHT' }
 | { type: 'MOVE_LEFT' }
+| { type: 'INITIALIZE', loop: number }
 
 export const START = 'START'
 export const PAUSE = 'PAUSE'
@@ -16,9 +17,19 @@ export const MOVE_DOWN = 'MOVE_DOWN'
 export const MOVE_RIGHT = 'MOVE_RIGHT'
 export const MOVE_LEFT = 'MOVE_LEFT'
 export const ROTATE = 'ROTATE'
+export const INITIALIZE = 'INITIALIZE'
+export const DESTRUCT = 'DESTRUCT'
 
-export function start(loop: number): Action {
-    return { type: START, loop }
+export function destruct() {
+    return { type: DESTRUCT }
+}
+
+export function initialize(loop: number) {
+    return { type: INITIALIZE, loop }
+}
+
+export function start(): Action {
+    return { type: START }
 }
 
 export function pause(): Action {

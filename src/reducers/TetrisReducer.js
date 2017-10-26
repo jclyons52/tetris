@@ -1,6 +1,7 @@
 // @flow
 
-import type { Action } from './TetrisActions'
+import { REHYDRATE } from 'redux-persist/constants'
+import type { Action } from '../actions/TetrisActions'
 import {
     START,
     PAUSE,
@@ -8,8 +9,10 @@ import {
     MOVE_DOWN,
     MOVE_RIGHT,
     MOVE_LEFT,
-    ROTATE
-} from './TetrisActions'
+    ROTATE,
+    INITIALIZE,
+    DESTRUCT
+} from '../actions/TetrisActions'
 import type { IRows } from '../Rows'
 import type { IPiece } from '../Piece'
 import { getRows } from '../Rows'
@@ -28,7 +31,7 @@ export type IStatus =
     | 2
     | 3
 
-export type State = {
+export type TetrisState = {
     rows: IRows,
     piece: ?IPiece,
     status: IStatus,
@@ -46,24 +49,41 @@ export const initialState = {
     loop: 0
 }
 
-export function reducer(state: State = initialState, action: Action = { type: null }): State {
+export default function reducer(state: TetrisState = initialState, action: Action = { type: null }): TetrisState {
     switch (action.type) {
-        case START:      return start(state, action.loop)
+        case START:      return start(state)
         case PAUSE:      return pause(state)
         case PLAY:       return play(state)
         case MOVE_DOWN:  return moveDown(state)
         case MOVE_RIGHT: return moveRight(state)
         case MOVE_LEFT:  return moveLeft(state)
         case ROTATE:     return rotate(state)
+        case REHYDRATE:  return rehydrate(state)
+        case INITIALIZE: return initialize(state, action.loop)
+        case DESTRUCT:   return destruct(state)
         default:         return state
     }
 }
 
-function start(state, loop) {
+function destruct(state) {
+    clearInterval(state.loop)
+    const loop = 0
+    return { ...state, loop }
+}
+
+function rehydrate(state) {
+    return state
+}
+
+function initialize(state, loop) {
+    return { ...state, loop }
+}
+
+function start(state) {
     const rows = getRows()
     const status = Status.active
     const score = 0
-    return { ...state, rows, status, score, loop }
+    return { ...state, rows, status, score }
 }
 
 function play(state) {
@@ -112,7 +132,6 @@ function gameOver(state, piece) {
     const status = Status.gameOver
     const min = Math.min(0, ...state.highScores)
     const loop = 0
-    clearInterval(state.loop)
     if (state.score > min) {
        const highScores =  [...state.highScores, state.score].sort(Number).slice(0, 3)
        return { ...state, piece, status, highScores, loop }

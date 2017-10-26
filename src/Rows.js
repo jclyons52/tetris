@@ -9,12 +9,12 @@ export type IPoint = {
 export type IRow = IPoint[]
 export type IRows = IRow[]
 
-export function getRows(count: number = 18): IRow[] {
-    return range(count).map(() => row())
+export function getRows(count: number = 18, rowCount: number = 10): IRow[] {
+    return range(count).map(() => row(rowCount))
 }
 
-function row() {
-    return range(10).map(() => p())
+function row(count) {
+    return range(count).map(() => p())
 }
 
 function p() {

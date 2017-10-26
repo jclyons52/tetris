@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react'
-import { Status } from '../actions/TetrisReducer'
-import type { IStatus } from '../actions/TetrisReducer'
+import { Status } from '../reducers/TetrisReducer'
+import type { IStatus } from '../reducers/TetrisReducer'
 import { Button, Jumbotron } from 'react-bootstrap'
 
 

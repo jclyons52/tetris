@@ -1,4 +1,4 @@
-import { reducer, initialState, Status } from './TetrisReducer'
+import reducer, { initialState, Status } from './TetrisReducer'
 import * as Piece from '../Piece'
 
 it('starts a game', () => {
