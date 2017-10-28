@@ -16,7 +16,7 @@ import {
 import type { IRows } from '../Rows'
 import type { IPiece } from '../Piece'
 import { getRows } from '../Rows'
-import * as Piece from '../Piece'
+import Piece from '../Piece'
 
 export const Status = {
     inactive: 0,

@@ -13,7 +13,7 @@ import {
 } from '../actions/SnakeActions'
 import { Status } from './TetrisReducer'
 import type { IStatus } from './TetrisReducer'
-import * as Piece from '../Piece'
+import Piece from '../Piece'
 import type { IPiece } from '../Piece'
 import * as Snake from '../games/snake/Snake'
 

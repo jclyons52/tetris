@@ -1,5 +1,5 @@
 import reducer, { initialState, Status } from './TetrisReducer'
-import * as Piece from '../Piece'
+import Piece from '../Piece'
 
 it('starts a game', () => {
     const initial = reducer()

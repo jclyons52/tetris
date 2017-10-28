@@ -3,7 +3,7 @@
 import React from 'react'
 import type { IRows } from '../Rows'
 import type { IPiece } from '../Piece'
-import * as Piece from '../Piece'
+import Piece from '../Piece'
 import { Col } from 'react-bootstrap'
 
 type Props = {
