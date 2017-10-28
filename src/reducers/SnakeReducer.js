@@ -15,7 +15,7 @@ import { Status } from './TetrisReducer'
 import type { IStatus } from './TetrisReducer'
 import Piece from '../Piece'
 import type { IPiece } from '../Piece'
-import * as Snake from '../games/snake/Snake'
+import * as Snake from '../Snake'
 
 export type SnakeState = {
   direction: IDirection,

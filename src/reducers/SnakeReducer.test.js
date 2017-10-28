@@ -10,29 +10,26 @@ import {
 import { Status } from './TetrisReducer'
 
 it('starts the game', () => {
-  const final = reducer(reducer(), start())
+  const final = [start()].reduce(reducer, reducer())
   expect(final.status).toBe(Status.active)
   expect(final.snake.loc.length).toBe(4)
   expect(final.score).toBe(0)
 })
 
 it('pauses game', () => {
-  const final = reducer(reducer(), pause())
+  const final = [pause()].reduce(reducer, reducer())
   expect(final.status).toBe(Status.paused)
 })
 
 it('restarts paused game', () => {
-  const final = reducer(
-    reducer(reducer(), pause()),
-    play()
-  )
+  const actions = [pause(), play()]
+  const final = actions.reduce(reducer, reducer())
   expect(final.status).toBe(Status.active)
 })
 
 it('it changes direction', () => {
-  const initial = reducer()
-  const action = changeDirection(Direction.down)
-  const final = reducer(initial, action)
+  const actions = [changeDirection(Direction.down)]
+  const final = actions.reduce(reducer, reducer())
   expect(final.direction).toBe(Direction.down)
 })
 

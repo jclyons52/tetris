@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import * as Location from './Location'
+import Location from './Location'
 import type { location } from './Location'
 import type { IRow, IPoint } from './Rows'
 import { getRows } from './Rows'
@@ -21,6 +21,16 @@ function randColor() {
 }
 
 class Piece {
+
+  loc: location[]
+
+  color: string
+
+  constructor(loc: location[], color: string) {
+    this.loc = loc
+    this.color = color
+  }
+
   static generate = (): IPiece => {
     return { color: randColor(), loc: Location.generate() }
   }

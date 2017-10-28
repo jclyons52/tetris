@@ -1,10 +1,8 @@
 // @flow
 
-import type { IPiece } from '../../Piece'
-import type { IDirection } from '../../actions/SnakeActions'
-import { Direction } from '../../actions/SnakeActions'
-import type { location } from '../../Location'
-import * as Piece from '../../Piece'
+import type { IPiece } from './Piece'
+import type { IDirection } from './actions/SnakeActions'
+import type { location } from './Location'
 
 const UP = 0
 const RIGHT = 1
