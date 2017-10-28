@@ -1,6 +1,6 @@
 // @flow
 
-import { getRows } from '../Rows'
+import { getRows, addBlock } from '../Rows'
 import type { IRows } from '../Rows'
 import type { SnakeActions, IDirection } from '../actions/SnakeActions'
 import { REHYDRATE } from 'redux-persist/constants'
@@ -46,18 +46,21 @@ export default function reducer(state: SnakeState = initialState, action: SnakeA
 }
 
 function start(state) {
-  const rows = getRows(16,16)
+  const board = addBlock(getRows(16,16))
+
   const status = Status.active
   const score = 0
   const snake = (() => {
-    const {color, loc} = Piece.generate()
+    const l = (x, y) => ({ x, y })
+    const color = 'black'
+    const loc =  [l(0, 3), l(0, 2), l(0, 1), l(0, 0)]
     return {
       color,
       loc: loc.map(({x,y}) => ({ x: x + 8, y: y + 8 }))
     }    
   })()
 
-  return { ...state, rows, status, score, snake }
+  return { ...state, board, status, score, snake }
 }
 
 function play(state) {
@@ -72,7 +75,14 @@ function pause(state) {
 
 function move(state) {
   if (!state.snake) return state
+  if (state.status !== Status.active) return state
   const snake =  Snake.move(state.snake, state.direction)
+  
+  if (Piece.isOverlapping(state.board, snake)) {
+    const snk = Snake.addBlock(snake, state.direction)
+    const board = addBlock(getRows(16,16))
+    return { ...state, snake: snk, board }
+  }
   return { ...state, snake }
 }
 

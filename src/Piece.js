@@ -74,7 +74,7 @@ export function isFull(row: IRow): boolean {
   return Location.isFull(row)
 }
 
-export function isOverlapping(rows: IRow[], p: IPiece) {
+export function isOverlapping(rows: IRow[], p: IPiece): boolean {
   return Location.isOverlapping(rows, p.loc) 
 }
 

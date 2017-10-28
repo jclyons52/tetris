@@ -14,8 +14,7 @@ const LEFT = 3
 export function move(snake: IPiece, direction: IDirection) {
   const [head, ...tail] = snake.loc
   const next = getNext(tail[tail.length - 1], direction)
-  tail.push(next)
-  return { ...snake, loc: tail }
+  return { ...snake, loc: [...tail, next] }
 }
 
 function getNext({ x, y }: location, direction: IDirection) {
@@ -27,3 +26,9 @@ function getNext({ x, y }: location, direction: IDirection) {
     default: throw new Error('invalid direction')
   }
 } 
+
+export function addBlock(snake: IPiece, direction: IDirection) {
+  const tail = snake.loc
+  const next = getNext(tail[tail.length - 1], direction)
+  return { ...snake, loc: [...tail, next] }
+}

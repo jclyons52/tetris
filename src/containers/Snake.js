@@ -43,12 +43,7 @@ const downArrow = 40
 
 class App extends Component<Props, any> {
 
-  constructor(props) {
-    super(props)
-    this._handleKeyDown = this._handleKeyDown.bind(this)
-  }
-
-  _handleKeyDown(event: KeyboardEvent): void {
+  _handleKeyDown = (event: KeyboardEvent) => {
     event.preventDefault()
     switch (event.keyCode) {
       case leftArrow:  return this.props.changeDirection(Direction.left)
@@ -105,7 +100,7 @@ function mapStateToProps(state: State) {
 function mapDispatchToProps(dispatch: Function) {
   return {
     initialize: () => {
-      const loop = setInterval(() => dispatch(move()), 1000)
+      const loop = setInterval(() => dispatch(move()), 300)
       dispatch(initialize(loop))
     },
     destruct: () => dispatch(destruct()),
