@@ -13,7 +13,7 @@ export const Direction = {
   left: 3
 }
 
-export type SnakeActions =
+export type SnakeAction =
   | { type: 'START_SNAKE' }
   | { type: 'PAUSE_SNAKE' }
   | { type: 'PLAY_SNAKE' }
@@ -31,30 +31,12 @@ export const DESTRUCT_SNAKE = 'DESTRUCT_SNAKE'
 export const MOVE_SNAKE = 'MOVE_SNAKE'
 export const CHANGE_DIRECTON_SNAKE = 'CHANGE_DIRECTION_SNAKE'
 
-export function destruct(): SnakeActions {
-  return { type: DESTRUCT_SNAKE }
-}
-
-export function initialize(loop: number): SnakeActions {
-  return { type: INITIALIZE_SNAKE, loop }
-}
-
-export function start(): SnakeActions {
-  return { type: START_SNAKE }
-}
-
-export function pause(): SnakeActions {
-  return { type: PAUSE_SNAKE }
-}
-
-export function play(): SnakeActions {
-  return { type: PLAY_SNAKE }
-}
-
-export function move(): SnakeActions {
-  return { type: MOVE_SNAKE }
-}
-
-export function changeDirection(direction: IDirection): SnakeActions {
-  return { type: CHANGE_DIRECTON_SNAKE, direction }
+export default class SnakeActions {
+  destruct = (): SnakeAction => ({ type: DESTRUCT_SNAKE })
+  initialize = (loop: number): SnakeAction => ({ type: INITIALIZE_SNAKE, loop })
+  start = (): SnakeAction => ({ type: START_SNAKE })
+  pause = (): SnakeAction => ({ type: PAUSE_SNAKE })
+  play = (): SnakeAction => ({ type: PLAY_SNAKE })
+  move = (): SnakeAction => ({ type: MOVE_SNAKE })
+  changeDirection = (direction: IDirection): SnakeAction => ({ type: CHANGE_DIRECTON_SNAKE, direction })
 }

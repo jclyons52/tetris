@@ -4,16 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import type { State } from '../reducers'
 import type { IRows } from '../Rows'
-import {
-  Direction,
-  start,
-  pause,
-  play,
-  move,
-  initialize,
-  destruct,
-  changeDirection
-} from '../actions/SnakeActions'
+import SnakeActions, { Direction } from '../actions/SnakeActions'
 import type { IDirection } from '../actions/SnakeActions'
 import type { IPiece } from '../Piece'
 import type { IStatus } from '../reducers/TetrisReducer'
@@ -22,7 +13,7 @@ import Jumbotron from '../components/Jumbotron'
 import Board from '../components/Board'
 import ScoreBoard from '../components/ScoreBoard'
 
-
+const snakeActions = new SnakeActions()
 type Props = {
   rows: IRows,
   status: IStatus,
@@ -100,14 +91,14 @@ function mapStateToProps(state: State) {
 function mapDispatchToProps(dispatch: Function) {
   return {
     initialize: () => {
-      const loop = setInterval(() => dispatch(move()), 300)
-      dispatch(initialize(loop))
+      const loop = setInterval(() => dispatch(snakeActions.move()), 300)
+      dispatch(snakeActions.initialize(loop))
     },
-    destruct: () => dispatch(destruct()),
-    start: () => dispatch(start()),
-    pause: () => dispatch(pause()),
-    play: () => dispatch(play()),
-    changeDirection: (direction: IDirection) => dispatch(changeDirection(direction))
+    destruct: () => dispatch(snakeActions.destruct()),
+    start: () => dispatch(snakeActions.start()),
+    pause: () => dispatch(snakeActions.pause()),
+    play: () => dispatch(snakeActions.play()),
+    changeDirection: (direction: IDirection) => dispatch(snakeActions.changeDirection(direction))
   }
 }
 

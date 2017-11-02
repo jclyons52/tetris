@@ -2,7 +2,7 @@
 
 import { getRows, addBlock } from '../Rows'
 import type { IRows } from '../Rows'
-import type { SnakeActions, IDirection } from '../actions/SnakeActions'
+import type { SnakeAction, IDirection } from '../actions/SnakeActions'
 import { REHYDRATE } from 'redux-persist/constants'
 import { 
   START_SNAKE,
@@ -33,7 +33,7 @@ const initialState = {
   snake: null
 }
 
-export default function reducer(state: SnakeState = initialState, action: SnakeActions = { type: null }): SnakeState {
+export default function reducer(state: SnakeState = initialState, action: SnakeAction = { type: null }): SnakeState {
   switch(action.type) {
     case START_SNAKE:            return start(state)
     case PAUSE_SNAKE:            return pause(state)
