@@ -19,8 +19,11 @@ it('restarts a paused game', () => {
 })
 
 it('adds a piece if move down is called without one', () => {
-    const final = [tactions.start(), tactions.moveDown()].reduce(reducer, reducer())
-    expect(final.piece.loc.length).toBe(4)
+    const final = [
+        tactions.start(), 
+        tactions.moveDown()
+    ].reduce(reducer, reducer())
+    expect(final.piece.loc.points.length).toBe(4)
 })
 
 it('does not move a piece if the game is not active', () => {
@@ -31,8 +34,8 @@ it('does not move a piece if the game is not active', () => {
 it('moves a piece right', () => {
     const initial = [tactions.start(), tactions.moveDown()].reduce(reducer, reducer())
     const final = [tactions.moveRight()].reduce(reducer, initial)
-    final.piece.loc.map((loc, i) => {
-        expect(loc.x).toBe(initial.piece.loc[i].x + 1)
+    final.piece.loc.points.map((loc, i) => {
+        expect(loc.x).toBe(initial.piece.loc.points[i].x + 1)
         return null
     })
 })
@@ -40,8 +43,8 @@ it('moves a piece right', () => {
 it('moves a piece left', () => {
     const initial = [tactions.start(), tactions.moveDown(), tactions.moveRight()].reduce(reducer, reducer())
     const final = [tactions.moveLeft()].reduce(reducer, initial)
-    final.piece.loc.map((loc, i) => {
-        expect(loc.x).toBe(initial.piece.loc[i].x - 1)
+    final.piece.loc.points.map((loc, i) => {
+        expect(loc.x).toBe(initial.piece.loc.points[i].x - 1)
         return null
     })
 })

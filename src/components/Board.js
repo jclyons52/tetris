@@ -2,13 +2,12 @@
 
 import React from 'react'
 import type { IRows } from '../Rows'
-import type { IPiece } from '../Piece'
 import Piece from '../Piece'
 import { Col } from 'react-bootstrap'
 
 type Props = {
   rows: IRows,
-  piece: ?IPiece,
+  piece: ?Piece,
   push?: number
 }
 

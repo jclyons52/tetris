@@ -13,16 +13,14 @@ import {
 } from '../actions/SnakeActions'
 import { Status } from './TetrisReducer'
 import type { IStatus } from './TetrisReducer'
-import Piece from '../Piece'
-import type { IPiece } from '../Piece'
-import * as Snake from '../Snake'
+import Snake from '../Snake'
 
 export type SnakeState = {
   direction: IDirection,
   status: IStatus,
   score: number,
   board: IRows,
-  snake: ?IPiece
+  snake: ?Snake
 } 
 
 const initialState = {
@@ -47,18 +45,9 @@ export default function reducer(state: SnakeState = initialState, action: SnakeA
 
 function start(state) {
   const board = addBlock(getRows(16,16))
-
   const status = Status.active
   const score = 0
-  const snake = (() => {
-    const l = (x, y) => ({ x, y })
-    const color = 'black'
-    const loc =  [l(0, 3), l(0, 2), l(0, 1), l(0, 0)]
-    return {
-      color,
-      loc: loc.map(({x,y}) => ({ x: x + 8, y: y + 8 }))
-    }    
-  })()
+  const snake = Snake.create()
 
   return { ...state, board, status, score, snake }
 }
@@ -74,12 +63,15 @@ function pause(state) {
 }
 
 function move(state) {
-  if (!state.snake) return state
+  const original = state.snake
+  if (!original) return state
   if (state.status !== Status.active) return state
-  const snake =  Snake.move(state.snake, state.direction)
-  
-  if (Piece.isOverlapping(state.board, snake)) {
-    const snk = Snake.addBlock(snake, state.direction)
+  const snake =  original.move()
+  if (original.loc.atBottomLimit()) {
+    return { ...state, status: Status.gameOver }
+  }
+  if (original.loc.isOverlapping(state.board)) {
+    const snk = original.addBlock()
     const board = addBlock(getRows(16,16))
     return { ...state, snake: snk, board }
   }
@@ -87,5 +79,6 @@ function move(state) {
 }
 
 function changeDirection(state, direction) {
-  return { ...state, direction }
+  if (!state.snake) return state
+  return { ...state, snake: state.snake.changeDirection(direction) }
 }

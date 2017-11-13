@@ -3,21 +3,25 @@
 import type { IRow } from './Rows'
 import { rand } from './Util'
 
-export type location = { x: number, y: number }
+export type Point = { x: number, y: number }
+
+type Limit = {
+    y: { upper: number, lower: number },
+    x: { upper: number, lower: number }
+}
 
 export default class Location {
-    static limit = {
-        y: {
-            upper: 17,
-            lower: 0
-        },
-        x: {
-            upper: 9,
-            lower: 0
-        }
+
+    points: Point[]
+
+    limit: Limit
+
+    constructor(points: Point[], limit: Limit) {
+        this.points = points
+        this.limit = limit
     }
-    
-    static generate = (): location[] => {
+
+    static generate = (): Location => {
         const l = (x, y) => ({ x, y })
         const shapes = [
             [l(0, 0), l(0, 1), l(1, 0), l(1, 1)],
@@ -26,40 +30,37 @@ export default class Location {
             [l(0, 0), l(0, 1), l(1, 2), l(0, 2)],
             [l(0, 0), l(0, 1), l(0, 2), l(1, 0)],
         ]
-        return rand(shapes)
+        return new Location(rand(shapes), {
+            y: { upper: 17, lower: 0 },
+            x: { upper: 9, lower: 0 }
+        })
     }
 
-    static rotate = (piece: location[]): location[] => {
-        const relative = locToArr(piece[1])
-        const newPiece = piece.map(loc => {
+    rotate = (): Location => {
+        const relative = locToArr(this.points[1])
+        const newPiece = this.points.map(loc => {
             const arr = diff(locToArr(loc), relative)
             const rotated = [-1 * arr[1], 1 * arr[0]]
             const n = sum(rotated, relative)
             return { x: n[0], y: n[1] }
         })
-        const shift = (() => {
-            const bounds = getBounds(newPiece)
-            return getRequiredShifts(bounds)
-        })()
 
-        return newPiece.map(({ x, y }) => ({ x: x + shift.x, y: y + shift.y }))
-
-        function getRequiredShifts(bounds) {
+        const getRequiredShifts = (bounds) => {
             return {
                 x: (() => {
-                    if (bounds.x.max > Location.limit.x.upper) {
-                        return Location.limit.x.upper - bounds.x.max;
+                    if (bounds.x.max > this.limit.x.upper) {
+                        return this.limit.x.upper - bounds.x.max;
                     }
-                    if (bounds.x.min < Location.limit.x.lower) {
+                    if (bounds.x.min < this.limit.x.lower) {
                         return - bounds.x.min;
                     }
                     return 0
                 })(),
                 y: (() => {
-                    if (bounds.y.max > Location.limit.y.upper) {
-                        return Location.limit.y.upper - bounds.y.max;
+                    if (bounds.y.max > this.limit.y.upper) {
+                        return this.limit.y.upper - bounds.y.max;
                     }
-                    if (bounds.y.min < Location.limit.y.lower) {
+                    if (bounds.y.min < this.limit.y.lower) {
                         return - bounds.y.min;
                     }
                     return 0
@@ -91,69 +92,89 @@ export default class Location {
         function sum([x1, y1], [x2, y2]) {
             return [x1 + x2, y1 + y2]
         }
+
+        const shift = (() => {
+            const bounds = getBounds(newPiece)
+            return getRequiredShifts(bounds)
+        })()
+
+        const pieces = newPiece.map(({ x, y }) => ({ x: x + shift.x, y: y + shift.y }))
+        return new Location(pieces, this.limit)
     }
 
-    static moveDown = (piece: location[]): location[] => {
+    moveDown = (): Location => {
         const shift = ({ x, y }) => ({ y: y + 1, x })
-        return Location.atBottomLimit(piece) ? piece : piece.map(shift)
+        if (this.atBottomLimit()) {
+            return new Location(this.points, this.limit)
+        }
+        return new Location(this.points.map(shift), this.limit)
     }
 
-    static moveLeft = (rows: IRow[], piece: location[]): location[] => {
+    moveLeft = (rows: IRow[]): Location => {
         const shift = ({ x, y }) => ({ x: x - 1, y })
-        return canMoveLeft(rows, piece) ? piece.map(shift) : piece
+        if (this.canMoveLeft(rows)) {
+            return new Location(this.points.map(shift), this.limit)
+        }
+        return new Location(this.points, this.limit)
     }
 
-    static moveRight = (rows: IRow[], piece: location[]): location[] => {
+    moveRight = (rows: IRow[], ): Location => {
         const shift = ({ x, y }) => ({ x: x + 1, y })
-        return canMoveRight(rows, piece) ? piece.map(shift) : piece
+        if (this.canMoveRight(rows)) {
+            return new Location(this.points.map(shift), this.limit)
+        }
+        return new Location(this.points, this.limit)
     }
 
-    static atLeftLimit = (piece: location[]): boolean => {
-        return piece.filter(({ x }) => x === Location.limit.x.lower).length > 0
+    atLeftLimit = (): boolean => {
+        return this.points.filter(({ x }) => x === this.limit.x.lower).length > 0
     }
 
-    static atRightLimit = (piece: location[]): boolean => {
-        return piece.filter(({ x }) => x === Location.limit.x.upper).length > 0
+    atRightLimit = (): boolean => {
+        return this.points.filter(({ x }) => x === this.limit.x.upper).length > 0
     }
 
-    static atTopLimit = (piece: location[]): boolean => {
-        return piece.filter(({ y }) => y === Location.limit.y.lower).length > 0
+    atTopLimit = (): boolean => {
+        return this.points.filter(({ y }) => y === this.limit.y.lower).length > 0
     }
 
-    static overTopLimit = (piece: location[]): boolean => {
-        return piece.filter(({ y }) => y > Location.limit.y.upper).length > 0
+    overTopLimit = (): boolean => {
+        return this.points.filter(({ y }) => y > this.limit.y.upper).length > 0
     }
 
-    static atBottomLimit = (piece: location[]): boolean => {
-        return piece.filter(({ y }) => y === Location.limit.y.upper).length > 0
+    atBottomLimit = (): boolean => {
+        return this.points.filter(({ y }) => y === this.limit.y.upper).length > 0
     }
 
-    static isFull = (row: IRow): boolean => {
+    isFull = (row: IRow): boolean => {
         return row.filter(i => !i.full).length === 0
     }
 
-    static isOverlapping = (rows: IRow[], p: location[]): boolean => {
-        return p.filter(({ x, y }) => rows[y][x].full).length > 0
+    isOverlapping = (rows: IRow[]): boolean => {
+        return this.points.filter(({ x, y }) => rows[y][x].full).length > 0
     }
 
-    static canMoveDown = (rows: IRow[], p: location[]): boolean => {
-        return p.filter(({ x, y }) => {
-            if (y === Location.limit.y.upper) return true
+    canMoveDown = (rows: IRow[]): boolean => {
+        return this.points.filter(({ x, y }) => {
+            if (y === this.limit.y.upper) return true
             if (rows[y + 1][x].full) return true
+            return false
         }).length === 0
     }
-}
 
-function canMoveLeft(rows: IRow[], p: location[]): boolean {
-    return p.filter(({ x, y }) => {
-        if (x === Location.limit.x.lower) return true
-        if (rows[y][x - 1].full) return true
-    }).length === 0
-}
+    canMoveLeft = (rows: IRow[]): boolean => {
+        return this.points.filter(({ x, y }) => {
+            if (x === this.limit.x.lower) return true
+            if (rows[y][x - 1].full) return true
+            return false
+        }).length === 0
+    }
 
-function canMoveRight(rows: IRow[], p: location[]): boolean {
-    return p.filter(({ x, y }) => {
-        if (x === Location.limit.x.upper) return true
-        if (rows[y][x + 1].full) return true
-    }).length === 0
+    canMoveRight = (rows: IRow[]): boolean => {
+        return this.points.filter(({ x, y }) => {
+            if (x === this.limit.x.upper) return true
+            if (rows[y][x + 1].full) return true
+            return false
+        }).length === 0
+    }
 }

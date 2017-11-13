@@ -32,8 +32,15 @@ it('moves the snake', () => {
   const initial = reducer(reducer(), snakeActions.start())
   const final = reducer(initial, snakeActions.move())
   
-  expect(final.snake.loc[0].y)
-  .toBe(initial.snake.loc[0].y - 1 )
+  expect(final.snake.loc.points[0].y)
+  .toBe(initial.snake.loc.points[0].y - 1 )
 })
 
-it()
+it('stops the game if the border is hit', () => {
+  const actions = [
+    snakeActions.start(),
+    ...[1,2,3,4,5,6,7,8,9].map(i => snakeActions.move())
+  ]
+  const final = actions.map(reducer, reducer())
+  expect(final.status).toBe(Status.gameOver)
+})

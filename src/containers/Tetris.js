@@ -5,18 +5,8 @@ import { connect } from 'react-redux'
 import type { State } from '../reducers'
 import type { IStatus } from '../reducers/TetrisReducer'
 import type { IRows } from '../Rows'
-import type { IPiece } from '../Piece'
-import { 
-  start,
-   pause,
-   play,
-   moveDown,
-   moveRight,
-   moveLeft,
-   rotate,
-   initialize,
-   destruct 
-} from '../actions/TetrisActions'
+import type Piece from '../Piece'
+import TetrisActions from '../actions/TetrisActions'
 import { Grid, Row } from 'react-bootstrap'
 import Jumbotron from '../components/Jumbotron'
 import Board from '../components/Board'
@@ -27,7 +17,7 @@ import '../App.css';
 
 type Props = {
   rows: IRows,
-  piece: IPiece,
+  piece: Piece,
   status: IStatus,
   score: number,
   highScores: number[],
@@ -45,6 +35,8 @@ const leftArrow = 37
 const upArrow = 38
 const rightArrow = 39
 const downArrow = 40
+
+const tetrisActions = new TetrisActions()
 
 class App extends Component<Props, any> {
 
@@ -107,17 +99,17 @@ function mapStateToProps(state: State) {
 function mapDispatchToProps(dispatch: Function) {
   return {
     initialize: () => {
-      const loop = setInterval(() => dispatch(moveDown()), 1000)
-      dispatch(initialize(loop))
+      const loop = setInterval(() => dispatch(tetrisActions.moveDown()), 1000)
+      dispatch(tetrisActions.initialize(loop))
     },
-    destruct: () => dispatch(destruct()),
-    start: () => dispatch(start()),
-    pause: () => dispatch(pause()),
-    play: () => dispatch(play()),
-    moveRight: () => dispatch(moveRight()),
-    moveLeft: () => dispatch(moveLeft()),
-    moveDown: () => dispatch(moveDown()),
-    rotate: () => dispatch(rotate())
+    destruct: () => dispatch(tetrisActions.destruct()),
+    start: () => dispatch(tetrisActions.start()),
+    pause: () => dispatch(tetrisActions.pause()),
+    play: () => dispatch(tetrisActions.play()),
+    moveRight: () => dispatch(tetrisActions.moveRight()),
+    moveLeft: () => dispatch(tetrisActions.moveLeft()),
+    moveDown: () => dispatch(tetrisActions.moveDown()),
+    rotate: () => dispatch(tetrisActions.rotate())
   }
 }
 

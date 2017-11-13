@@ -6,7 +6,7 @@ import type { State } from '../reducers'
 import type { IRows } from '../Rows'
 import SnakeActions, { Direction } from '../actions/SnakeActions'
 import type { IDirection } from '../actions/SnakeActions'
-import type { IPiece } from '../Piece'
+import type Snake from '../Snake'
 import type { IStatus } from '../reducers/TetrisReducer'
 import { Grid, Row } from 'react-bootstrap'
 import Jumbotron from '../components/Jumbotron'
@@ -18,7 +18,7 @@ type Props = {
   rows: IRows,
   status: IStatus,
   score: number,
-  snake: IPiece,
+  snake: Snake,
   start: Function,
   pause: Function,
   play: Function,
