@@ -34,6 +34,16 @@ export default class Snake extends Piece {
     )
   }
 
+  atLimit = () => {
+    switch (this.direction) {
+      case UP:      return this.loc.atTopLimit()
+      case DOWN:    return this.loc.atBottomLimit()
+      case LEFT:    return this.loc.atLeftLimit()
+      case RIGHT:   return this.loc.atRightLimit()
+      default:      return true
+    }
+  }
+
   changeDirection = (direction: IDirection): Snake => {
     return new Snake(this.loc, this.color, direction)
   }

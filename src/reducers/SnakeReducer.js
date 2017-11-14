@@ -67,7 +67,7 @@ function move(state) {
   if (!original) return state
   if (state.status !== Status.active) return state
   const snake =  original.move()
-  if (original.loc.atBottomLimit()) {
+  if (original.atLimit()) {
     return { ...state, status: Status.gameOver }
   }
   if (original.loc.isOverlapping(state.board)) {
