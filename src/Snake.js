@@ -4,7 +4,7 @@ import Piece from './Piece'
 import type { IDirection } from './actions/SnakeActions'
 import Location from './Location'
 import type { Point } from './Location'
-
+import { Map } from 'immutable'
 
 const UP = 0
 const RIGHT = 1
@@ -35,13 +35,27 @@ export default class Snake extends Piece {
   }
 
   atLimit = () => {
+    const point = this.loc.points[this.loc.points.length - 1]
     switch (this.direction) {
-      case UP:      return this.loc.atTopLimit()
-      case DOWN:    return this.loc.atBottomLimit()
-      case LEFT:    return this.loc.atLeftLimit()
-      case RIGHT:   return this.loc.atRightLimit()
+      case UP:      return this.loc.atTopLimit(point)
+      case DOWN:    return this.loc.atBottomLimit(point)
+      case LEFT:    return this.loc.atLeftLimit(point)
+      case RIGHT:   return this.loc.atRightLimit(point)
       default:      return true
     }
+  }
+
+  selfOverlapping = () => {
+    const grouped = this.loc.points.reduce((carry: Map<string, Point[]>, item: Point) => {
+      const key = String(item.x) + String(item.y)
+      if (!carry.has(key)) return carry.set(key, [item])
+      return carry.set(
+        key, 
+        [...carry.get(key), item]
+      )
+    }, Map())
+
+    return grouped.filter(x => x.length > 1).count() > 0
   }
 
   changeDirection = (direction: IDirection): Snake => {
@@ -56,10 +70,10 @@ export default class Snake extends Piece {
 
   _getNext = ({ x, y }: Point, direction: IDirection) => {
     switch (direction) {
-      case UP: return { x, y: y - 1 }
-      case DOWN: return { x, y: y + 1 }
+      case UP:    return { x, y: y - 1 }
+      case DOWN:  return { x, y: y + 1 }
       case RIGHT: return { x: x + 1, y }
-      case LEFT: return { x: x - 1, y }
+      case LEFT:  return { x: x - 1, y }
       default: throw new Error('invalid direction')
     }
   }

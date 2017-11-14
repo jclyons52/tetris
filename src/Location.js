@@ -126,23 +126,28 @@ export default class Location {
         return new Location(this.points, this.limit)
     }
 
-    atLeftLimit = (): boolean => {
+    atLeftLimit = (point: ?Point): boolean => {
+        if (point) return point.x === this.limit.x.lower
         return this.points.filter(({ x }) => x === this.limit.x.lower).length > 0
     }
 
-    atRightLimit = (): boolean => {
+    atRightLimit = (point: ?Point): boolean => {
+        if (point) return point.x === this.limit.x.upper
         return this.points.filter(({ x }) => x === this.limit.x.upper).length > 0
     }
 
-    atTopLimit = (): boolean => {
+    atTopLimit = (point: ?Point): boolean => {
+        if (point) return point.y === this.limit.y.lower
         return this.points.filter(({ y }) => y === this.limit.y.lower).length > 0
     }
 
-    overTopLimit = (): boolean => {
+    overTopLimit = (point: ?Point): boolean => {
+        if (point) return point.y > this.limit.y.upper
         return this.points.filter(({ y }) => y > this.limit.y.upper).length > 0
     }
 
-    atBottomLimit = (): boolean => {
+    atBottomLimit = (point: ?Point): boolean => {
+        if (point) return point.y === this.limit.y.upper
         return this.points.filter(({ y }) => y === this.limit.y.upper).length > 0
     }
 
@@ -151,7 +156,11 @@ export default class Location {
     }
 
     isOverlapping = (rows: IRow[]): boolean => {
-        return this.points.filter(({ x, y }) => rows[y][x].full).length > 0
+        return this.points.filter(({ x, y }) => {
+            if (y > rows.length) return false
+            if (x > rows[y].length) return false
+            return rows[y][x].full
+        }).length > 0
     }
 
     canMoveDown = (rows: IRow[]): boolean => {
