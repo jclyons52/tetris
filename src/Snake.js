@@ -70,7 +70,9 @@ export default class Snake extends Piece {
     return new Snake(
       new Location([...tail, next],
         this.loc.limit
-      )
+      ),
+      this.color,
+      this.direction
     )
   }
 }

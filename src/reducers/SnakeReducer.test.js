@@ -2,35 +2,35 @@ import reducer from './SnakeReducer'
 import SnakeActions, { Direction } from '../actions/SnakeActions'
 import { Status } from './TetrisReducer'
 
-const snakeActions = new SnakeActions()
+const sa = new SnakeActions()
 
 it('starts the game', () => {
-  const final = [snakeActions.start()].reduce(reducer, reducer())
+  const final = [sa.start()].reduce(reducer, reducer())
   expect(final.status).toBe(Status.active)
-  expect(final.snake.loc.length).toBe(4)
+  expect(final.snake.loc.points.length).toBe(4)
   expect(final.score).toBe(0)
 })
 
 it('pauses game', () => {
-  const final = [snakeActions.pause()].reduce(reducer, reducer())
+  const final = [sa.pause()].reduce(reducer, reducer())
   expect(final.status).toBe(Status.paused)
 })
 
 it('restarts paused game', () => {
-  const actions = [snakeActions.pause(), snakeActions.play()]
+  const actions = [sa.pause(), sa.play()]
   const final = actions.reduce(reducer, reducer())
   expect(final.status).toBe(Status.active)
 })
 
 it('it changes direction', () => {
-  const actions = [snakeActions.changeDirection(Direction.down)]
+  const actions = [sa.start(), sa.changeDirection(Direction.down)]
   const final = actions.reduce(reducer, reducer())
-  expect(final.direction).toBe(Direction.down)
+  expect(final.snake.direction).toBe(Direction.down)
 })
 
 it('moves the snake', () => {
-  const initial = reducer(reducer(), snakeActions.start())
-  const final = reducer(initial, snakeActions.move())
+  const initial = reducer(reducer(), sa.start())
+  const final = reducer(initial, sa.move())
   
   expect(final.snake.loc.points[0].y)
   .toBe(initial.snake.loc.points[0].y - 1 )
@@ -38,9 +38,9 @@ it('moves the snake', () => {
 
 it('stops the game if the border is hit', () => {
   const actions = [
-    snakeActions.start(),
-    ...[1,2,3,4,5,6,7,8,9].map(i => snakeActions.move())
+    sa.start(),
+    ...[1,2,3,4,5,6,7,8,9].map(() => sa.move())
   ]
-  const final = actions.map(reducer, reducer())
+  const final = actions.reduce(reducer, reducer())
   expect(final.status).toBe(Status.gameOver)
 })
