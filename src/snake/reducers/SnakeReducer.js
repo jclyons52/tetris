@@ -1,7 +1,7 @@
 // @flow
 
-import { getRows, addBlock } from '../Rows'
-import type { IRows } from '../Rows'
+import { getRows, addBlock } from '../../Rows'
+import type { IRows } from '../../Rows'
 import type { SnakeAction, IDirection } from '../actions/SnakeActions'
 import { REHYDRATE } from 'redux-persist/constants'
 import { 
@@ -11,8 +11,8 @@ import {
   MOVE_SNAKE,
   CHANGE_DIRECTON_SNAKE
 } from '../actions/SnakeActions'
-import { Status } from './TetrisReducer'
-import type { IStatus } from './TetrisReducer'
+import { Status } from '../../types'
+import type { IStatus } from '../../types'
 import Snake from '../Snake'
 
 export type SnakeState = {

@@ -9,6 +9,8 @@ export type Action =
     | { type: 'MOVE_RIGHT' }
     | { type: 'MOVE_LEFT' }
     | { type: 'INITIALIZE', loop: number }
+    | { type: 'DESTRUCT' }
+    | { type: 'ROTATE' }
 
 export const START = 'START'
 export const PAUSE = 'PAUSE'
@@ -22,13 +24,13 @@ export const DESTRUCT = 'DESTRUCT'
 
 
 export default class TetrisActions {
-    destruct = () => ({ type: DESTRUCT })
-    initialize = (loop: number) => ({ type: INITIALIZE, loop })
+    destruct = (): Action => ({ type: DESTRUCT })
+    initialize = (loop: number): Action => ({ type: INITIALIZE, loop })
     start = (): Action => ({ type: START })
     pause = (): Action => ({ type: PAUSE })
     play = (): Action => ({ type: PLAY })
     moveDown = (): Action => ({ type: MOVE_DOWN })
-    moveRight = () => ({ type: MOVE_RIGHT })
-    moveLeft = () => ({ type: MOVE_LEFT })
-    rotate = () => ({ type: ROTATE })
+    moveRight = (): Action => ({ type: MOVE_RIGHT })
+    moveLeft = (): Action => ({ type: MOVE_LEFT })
+    rotate = (): Action => ({ type: ROTATE })
 }

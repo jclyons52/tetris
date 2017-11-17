@@ -13,22 +13,11 @@ import {
     INITIALIZE,
     DESTRUCT
 } from '../actions/TetrisActions'
-import type { IRows } from '../Rows'
-import { getRows } from '../Rows'
-import Piece from '../Piece'
-
-export const Status = {
-    inactive: 0,
-    active: 1,
-    paused: 2,
-    gameOver: 3
-}
-
-export type IStatus =
-    | 0
-    | 1
-    | 2
-    | 3
+import type { IRows } from '../../Rows'
+import { getRows } from '../../Rows'
+import Piece from '../../Piece'
+import type { IStatus } from '../../types'
+import { Status } from '../../types'
 
 export type TetrisState = {
     rows: IRows,

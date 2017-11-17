@@ -2,16 +2,15 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import type { State } from '../reducers'
-import type { IRows } from '../Rows'
+import type { IRows } from '../../Rows'
 import SnakeActions, { Direction } from '../actions/SnakeActions'
 import type { IDirection } from '../actions/SnakeActions'
 import type Snake from '../Snake'
-import type { IStatus } from '../reducers/TetrisReducer'
+import type { IStatus, State } from '../../types'
 import { Grid, Row } from 'react-bootstrap'
-import Jumbotron from '../components/Jumbotron'
-import Board from '../components/Board'
-import ScoreBoard from '../components/ScoreBoard'
+import Jumbotron from '../../components/Jumbotron'
+import Board from '../../components/Board'
+import ScoreBoard from '../../components/ScoreBoard'
 
 const snakeActions = new SnakeActions()
 type Props = {
@@ -68,7 +67,7 @@ class App extends Component<Props, any> {
             <Board
               rows={this.props.rows}
               piece={this.props.snake}
-              push={0}
+              push={3}
             />
             <ScoreBoard
               highScores={[1]}

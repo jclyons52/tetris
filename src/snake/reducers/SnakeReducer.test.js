@@ -1,6 +1,8 @@
+// @flow
+
 import reducer from './SnakeReducer'
 import SnakeActions, { Direction } from '../actions/SnakeActions'
-import { Status } from './TetrisReducer'
+import { Status } from '../../tetris/reducers/TetrisReducer'
 
 const sa = new SnakeActions()
 

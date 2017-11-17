@@ -1,9 +1,9 @@
 // @flow
 
-import Piece from './Piece'
+import Piece from '../Piece'
 import type { IDirection } from './actions/SnakeActions'
-import Location from './Location'
-import type { Point } from './Location'
+import Location from '../Location'
+import type { Point } from '../Location'
 import { Map } from 'immutable'
 
 const UP = 0
@@ -48,7 +48,9 @@ export default class Snake extends Piece {
   selfOverlapping = () => {
     const grouped = this.loc.points.reduce((carry: Map<string, Point[]>, item: Point) => {
       const key = String(item.x) + String(item.y)
-      if (!carry.has(key)) return carry.set(key, [item])
+      if (!carry.has(key)) {
+        return carry.set(key, [item])
+      }
       return carry.set(
         key, 
         [...carry.get(key), item]

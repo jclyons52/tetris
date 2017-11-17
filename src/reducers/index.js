@@ -1,14 +1,7 @@
 // @flow
 
-import { combineReducers } from "redux";
-import tetris from './TetrisReducer'
-import type { TetrisState } from './TetrisReducer'
-import snake from './SnakeReducer'
-import type { SnakeState } from './SnakeReducer'
-
-export type State = {
-  tetris: TetrisState,
-  snake: SnakeState
-}
+import { combineReducers } from "redux"
+import tetris from '../tetris/reducers/TetrisReducer'
+import snake from '../snake/reducers/SnakeReducer'
 
 export default combineReducers({ tetris, snake })

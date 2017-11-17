@@ -2,18 +2,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import type { State } from '../reducers'
-import type { IStatus } from '../reducers/TetrisReducer'
-import type { IRows } from '../Rows'
-import type Piece from '../Piece'
+import type { IStatus, State } from '../../types'
+import type { IRows } from '../../Rows'
+import type Piece from '../../Piece'
 import TetrisActions from '../actions/TetrisActions'
 import { Grid, Row } from 'react-bootstrap'
-import Jumbotron from '../components/Jumbotron'
-import Board from '../components/Board'
-import ScoreBoard from '../components/ScoreBoard'
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
-import '../App.css';
+import Jumbotron from '../../components/Jumbotron'
+import Board from '../../components/Board'
+import ScoreBoard from '../../components/ScoreBoard'
 
 type Props = {
   rows: IRows,
